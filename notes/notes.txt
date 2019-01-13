@@ -1,0 +1,12 @@
+Needs for hanging hatches automatically:
+1. Align on white gaffer tape
+2. Two sensors on front to rotate robot until square against the hatch holder
+3. Select which height to place the hatch
+4. Try to combine actions (move forward and raise) while getting robot into proximity
+5. Place hatch (via mechanism)
+
+1. Align on white gaffer tape
+    - photoelectric sensor facing down at center point of driving wheels (so we just spin)
+
+2. Use proximity/distance sensors to measure distance and determine rotation direction
+    - 
