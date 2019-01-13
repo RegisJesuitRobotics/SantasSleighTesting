@@ -97,11 +97,11 @@ public class Robot extends IterativeRobot {
   public void teleopPeriodic() {
     m_robotdrive.Drive();
     m_robotdrive.getSensorData();
-    if(!isPlacingHatch){
-      isPlacingHatch = true;
-    m_robotdrive.hatchAlign(Direction.Right, .4);
-    m_robotdrive.approachHatch();
-    }
+    // if(!isPlacingHatch){
+    //   isPlacingHatch = true;
+    // m_robotdrive.hatchAlign(Direction.Right, .4);
+    // m_robotdrive.approachHatch();
+    // }
   }
 
 
