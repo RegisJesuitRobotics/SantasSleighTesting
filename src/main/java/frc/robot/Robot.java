@@ -97,8 +97,7 @@ public class Robot extends IterativeRobot {
   public void teleopPeriodic() {
     m_robotdrive.Drive();
     m_robotdrive.getSensorData();
-    m_robotdrive.AlignButton();
-    m_robotdrive.ApproachButton();
+    m_robotdrive.fullSequence();
     //Triangle for approach
     //Circle for hatch
   }

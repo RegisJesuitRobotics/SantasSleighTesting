@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotDrive {
@@ -14,14 +15,16 @@ public class RobotDrive {
 	PlaystationController m_playStationController;
 	// STUFF IN THE DIO IS ANALOG INPUT
 	AnalogInput LeftUltraSonic, Laser, m_RetroReflectiveSensor;
+	boolean HasBeenStopped;
 
 	public RobotDrive(PlaystationController playStationController) {
 		m_playStationController = playStationController;
+		HasBeenStopped = false;
 		LeftMotor = new WPI_TalonSRX(0);
 		RightMotor = new WPI_TalonSRX(1);
 		LeftUltraSonic = new AnalogInput(2);
-		Laser = new AnalogInput(1);
-		m_RetroReflectiveSensor = new AnalogInput(0);
+		Laser = new AnalogInput(0);
+		m_RetroReflectiveSensor = new AnalogInput(3);
 
 		/*
 		 * Encoder code // LeftEncoder = new Encoder(0, 1, true,
@@ -80,6 +83,15 @@ public class RobotDrive {
 
 	}
 
+	public void fullSequence() {
+		HasBeenStopped = false;
+		if (m_playStationController.ButtonR1() == true) {
+			FindWhiteLine();
+			hatchAlign(Direction.Right, 0.4);
+			approachHatch();
+		}
+	}
+
 	public void AlignButton() {
 		if (m_playStationController.ButtonCircle() == true) {
 			hatchAlign(Direction.Right, .4);
@@ -107,6 +119,7 @@ public class RobotDrive {
 		SmartDashboard.putNumber("left average get", LeftUltraSonic.getAverageValue());
 		SmartDashboard.putNumber("Math Distance", getUltraSonicInches());
 		SmartDashboard.putNumber("Laser Voltage", Laser.getVoltage());
+		SmartDashboard.putNumber("Retro Bayyybeeeeee ", m_RetroReflectiveSensor.getVoltage());
 
 	}
 
@@ -127,44 +140,56 @@ public class RobotDrive {
 
 	// THIS ONE IMPORTANT
 	public void FindWhiteLine() {
-
-		while (true) {
-			DriveForward(.4);
-			if (m_RetroReflectiveSensor.getVoltage() < 4.5) {
+		while (true && HasBeenStopped == false) {
+			DriveForward(.15);
+			if ((m_RetroReflectiveSensor.getVoltage() < 3)) {
 				break;
-			} else if (m_playStationController.ButtonSquare()) {
+			}
+			if ((m_playStationController.ButtonSquare() == true)) {
+				HasBeenStopped = true;
 				break;
 			}
 		}
+		moveAnAmount(.05, 1);
 		stop();
 	}
 
 	public void hatchAlign(Direction direction, double speed) {
-		SmartDashboard.putString("Status", "startedTurning");
-		double leftProximity = getUltraSonicInches();
-		SmartDashboard.putNumber("Status", leftProximity);
-		while (leftProximity >= 30 || leftProximity <= 2) {
-			spin(direction, speed);
-			SmartDashboard.putNumber("Status", leftProximity);
-			leftProximity = getUltraSonicInches();
-		}
-		stop();
-		SmartDashboard.putString("Status", "stoppedTurning");
-		double oldLeftProximity = getUltraSonicInches();
-		spin(direction, speed);
-		while (oldLeftProximity != getUltraSonicInches()) {
-			SmartDashboard.putNumber("Left Proximity", getUltraSonicInches());
-			SmartDashboard.putString("Status2", "secondLoop");
 
+		if (HasBeenStopped == false) {
+
+			SmartDashboard.putString("Status", "startedTurning");
+			double leftProximity = getUltraSonicInches();
+			SmartDashboard.putNumber("Status", leftProximity);
+
+			while (leftProximity >= 30 || leftProximity <= 2) {
+				spin(direction, speed);
+				SmartDashboard.putNumber("Status", leftProximity);
+				leftProximity = getUltraSonicInches();
+				if (m_playStationController.ButtonSquare()) {
+					HasBeenStopped = true;
+					break;
+				}
+			}
+			stop();
+
+			SmartDashboard.putString("Status", "stoppedTurning");
+			double oldLeftProximity = getUltraSonicInches();
 			spin(direction, speed);
-			oldLeftProximity = leftProximity;
-			leftProximity = getUltraSonicInches();
+			while (oldLeftProximity != getUltraSonicInches() && HasBeenStopped == false) {
+				SmartDashboard.putNumber("Left Proximity", getUltraSonicInches());
+				SmartDashboard.putString("Status2", "secondLoop");
+
+				spin(direction, speed);
+				oldLeftProximity = leftProximity;
+				leftProximity = getUltraSonicInches();
+				SmartDashboard.putNumber("Old Left Proximity", oldLeftProximity);
+				SmartDashboard.putNumber("Left Proximity", leftProximity);
+			}
+			stop();
 			SmartDashboard.putNumber("Old Left Proximity", oldLeftProximity);
-			SmartDashboard.putNumber("Left Proximity", leftProximity);
+			SmartDashboard.putString("Status2", "stopped Second Loop");
 		}
-		stop();
-		SmartDashboard.putNumber("Old Left Proximity", oldLeftProximity);
-		SmartDashboard.putString("Status2", "stopped Second Loop");
 	}
 
 	public void spin(Direction direction, double speed) {
@@ -183,20 +208,37 @@ public class RobotDrive {
 	}
 
 	public void approachHatch() {
-		SmartDashboard.putString("Status3", "stopped Second Loop");
-		double proximityOutOfRange = 30.042;
-		double leftProximity = getUltraSonicInches();
-		while (leftProximity == proximityOutOfRange) {
-			DriveForward(0.4);
-			leftProximity = getUltraSonicInches();
+		if (HasBeenStopped == false) {
+			SmartDashboard.putString("Status3", "stopped Second Loop");
+			double proximityOutOfRange = 30.042;
+			double leftProximity = getUltraSonicInches();
+			while (leftProximity == proximityOutOfRange) {
+				DriveForward(0.4);
+				leftProximity = getUltraSonicInches();
+				if (m_playStationController.ButtonSquare()) {
+					HasBeenStopped = true;
+					break;
+				}
+			}
+			while (leftProximity > 4 && leftProximity != proximityOutOfRange) {
+				SmartDashboard.putString("Status3", "inside Loop");
+				DriveForward(0.2);
+				leftProximity = getUltraSonicInches();
+				SmartDashboard.putNumber("Left Proximity", leftProximity);
+				if (m_playStationController.ButtonSquare()) {
+					HasBeenStopped = true;
+					break;
+				}
+			}
+			SmartDashboard.putString("Status3", "stop");
+			stop();
 		}
-		while (leftProximity > 4 && leftProximity != proximityOutOfRange) {
-			SmartDashboard.putString("Status3", "inside Loop");
-			DriveForward(0.2);
-			leftProximity = getUltraSonicInches();
-			SmartDashboard.putNumber("Left Proximity", leftProximity);
-		}
-		SmartDashboard.putString("Status3", "stop");
+	}
+
+	public void moveAnAmount(double speed, double time) {
+		LeftMotor.set(speed);
+		RightMotor.set(speed);
+		Timer.delay(time);
 		stop();
 
 	}
