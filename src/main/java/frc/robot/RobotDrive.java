@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,15 +13,15 @@ public class RobotDrive {
 	// Encoder LeftEncoder, RightEncoder;
 	PlaystationController m_playStationController;
 	// STUFF IN THE DIO IS ANALOG INPUT
-	AnalogInput LeftUltraSonic, Laser;
-	
-	//GRADLE WE LOVE U SORRRY FOR OUR SINS
+	AnalogInput LeftUltraSonic, Laser, m_RetroReflectiveSensor;
 
 	public RobotDrive(PlaystationController playStationController) {
 		m_playStationController = playStationController;
 		LeftMotor = new WPI_TalonSRX(0);
 		RightMotor = new WPI_TalonSRX(1);
 		LeftUltraSonic = new AnalogInput(2);
+		Laser = new AnalogInput(1);
+		m_RetroReflectiveSensor = new AnalogInput(0);
 
 		/*
 		 * Encoder code // LeftEncoder = new Encoder(0, 1, true,
@@ -46,7 +47,6 @@ public class RobotDrive {
 		double LeftTrigger = m_playStationController.LeftTrigger();
 		double LeftStick = m_playStationController.LeftStickXAxis();
 		boolean isTriangle = m_playStationController.ButtonTriangle();
-
 		double Deadzone = 0.1;
 		double RightPower = 1;
 		double LeftPower = 1;
@@ -72,19 +72,33 @@ public class RobotDrive {
 			move = "Straight ";
 		}
 		// if (isTriangle == true) {
-		// 	LeftEncoder.reset();
-		// 	RightEncoder.reset();
+		// LeftEncoder.reset();
+		// RightEncoder.reset();
 		// }
 		LeftMotor.set(-LeftPower * Limiter);
 		RightMotor.set(RightPower * Limiter);
 
 	}
 
-	// public void EncoderTest() {
-	// 	SmartDashboard.putNumber("LeEncode", LeftEncoder.get());
-	// 	SmartDashboard.putNumber("RiEncode", RightEncoder.get());
+	public void AlignButton() {
+		if (m_playStationController.ButtonCircle() == true) {
+			hatchAlign(Direction.Right, .4);
+		}
 
-	// }
+	}
+
+	public void ApproachButton() {
+		if (m_playStationController.ButtonTriangle() == true) {
+			approachHatch();
+		}
+
+	}
+
+	public void FindWhiteLineButton() {
+		if (m_playStationController.ButtonX() == true) {
+			FindWhiteLine();
+		}
+	}
 
 	public void getSensorData() {
 		SmartDashboard.putNumber("left voltage", LeftUltraSonic.getVoltage());
@@ -93,6 +107,7 @@ public class RobotDrive {
 		SmartDashboard.putNumber("left average get", LeftUltraSonic.getAverageValue());
 		SmartDashboard.putNumber("Math Distance", getUltraSonicInches());
 		SmartDashboard.putNumber("Laser Voltage", Laser.getVoltage());
+
 	}
 
 	// UltraSonic Sensor begins to become unreliable around 13 inches away, Sensor
@@ -110,20 +125,18 @@ public class RobotDrive {
 		RightMotor.set(speed);
 	}
 
+	// THIS ONE IMPORTANT
 	public void FindWhiteLine() {
-		/*
-		
-		*/
 
-		boolean isWhiteLineFound = false;
-
-		while (!isWhiteLineFound) {
-			// Drive forward
-			// Read from sensor
-			// if sensor finds white tape
-			// isWhiteLineFound = true;
-			// stop moving forward
+		while (true) {
+			DriveForward(.4);
+			if (m_RetroReflectiveSensor.getVoltage() < 4.5) {
+				break;
+			} else if (m_playStationController.ButtonSquare()) {
+				break;
+			}
 		}
+		stop();
 	}
 
 	public void hatchAlign(Direction direction, double speed) {
