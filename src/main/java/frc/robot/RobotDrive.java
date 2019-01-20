@@ -154,6 +154,17 @@ public class RobotDrive {
 		stop();
 	}
 
+	public void moveUntilTouch(){
+
+
+		
+		DriveForward(.15);
+		//untilTouch(dgtl);
+
+		stop();
+
+	}
+
 	public void hatchAlign(Direction direction, double speed) {
 
 		if (HasBeenStopped == false) {
