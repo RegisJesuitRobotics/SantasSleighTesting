@@ -21,8 +21,6 @@ public class RobotDrive {
 		LeftMotor = new WPI_TalonSRX(0);
 		RightMotor = new WPI_TalonSRX(1);
 		LeftUltraSonic = new AnalogInput(2);
-		Laser = new AnalogInput(0);
-
 
 		/*
 		 * Encoder code // LeftEncoder = new Encoder(0, 1, true,
@@ -94,7 +92,6 @@ public class RobotDrive {
 		SmartDashboard.putNumber("left average voltage", LeftUltraSonic.getAverageVoltage());
 		SmartDashboard.putNumber("left average get", LeftUltraSonic.getAverageValue());
 		SmartDashboard.putNumber("Math Distance", getUltraSonicInches());
-
 		SmartDashboard.putNumber("Laser Voltage", Laser.getVoltage());
 	}
 
