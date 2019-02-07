@@ -14,7 +14,7 @@ public class RobotDrive {
 	// Encoder LeftEncoder, RightEncoder;
 	PlaystationController m_playStationController;
 	// STUFF IN THE DIO IS ANALOG INPUT
-	AnalogInput LeftUltraSonic, Laser, m_RetroReflectiveSensor;
+	AnalogInput LeftUltraSonic, Laser, m_RetroReflectiveSensor, LineFollower;
 	boolean HasBeenStopped;
 
 	public RobotDrive(PlaystationController playStationController) {
@@ -24,7 +24,8 @@ public class RobotDrive {
 		RightMotor = new WPI_TalonSRX(1);
 		LeftUltraSonic = new AnalogInput(2);
 		Laser = new AnalogInput(0);
-		m_RetroReflectiveSensor = new AnalogInput(3);
+		// m_RetroReflectiveSensor = new AnalogInput(3);
+		LineFollower = new AnalogInput(3);
 
 		/*
 		 * Encoder code // LeftEncoder = new Encoder(0, 1, true,
@@ -154,12 +155,10 @@ public class RobotDrive {
 		stop();
 	}
 
-	public void moveUntilTouch(){
+	public void moveUntilTouch() {
 
-
-		
 		DriveForward(.15);
-		//untilTouch(dgtl);
+		// untilTouch(dgtl);
 
 		stop();
 
@@ -252,5 +251,9 @@ public class RobotDrive {
 		Timer.delay(time);
 		stop();
 
+	}
+
+	public void getWhiteLine() {
+		SmartDashboard.putNumber("Line Follower Value", LineFollower.getVoltage());
 	}
 }
