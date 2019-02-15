@@ -3,21 +3,43 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.awt.Event;
 
-public class RobotDrive {
+public class RobotDrive extends Subsystem{
 	WPI_TalonSRX RightMotor, LeftMotor;
 	// Encoder LeftEncoder, RightEncoder;
 	PlaystationController m_playStationController;
 	// STUFF IN THE DIO IS ANALOG INPUT
 	AnalogInput LeftUltraSonic, Laser, m_RetroReflectiveSensor, LineFollower;
 	boolean HasBeenStopped;
+	
+	@Override
+	protected void initDefaultCommand() {
+		
+	}
+	
 
+	public void spin() {
+	System.out.println("Running");
+	Robot.m_robotdrive.LeftMotor.set(-0.3);
+	Robot.m_robotdrive.RightMotor.set(-0.3);
+	try {
+		wait(2000);
+	} catch (Exception e) {
+	//TODO: handle exception
+	}
+	Robot.m_robotdrive.LeftMotor.set(0);
+	Robot.m_robotdrive.RightMotor.set(0);
+	}
 	public RobotDrive(PlaystationController playStationController) {
+		super("robotDrive");
 		m_playStationController = playStationController;
 		HasBeenStopped = false;
 		LeftMotor = new WPI_TalonSRX(0);
@@ -27,26 +49,19 @@ public class RobotDrive {
 		// m_RetroReflectiveSensor = new AnalogInput(3);
 		LineFollower = new AnalogInput(3);
 
-		/*
-		 * Encoder code // LeftEncoder = new Encoder(0, 1, true,
-		 * Encoder.EncodingType.k2X); // RightEncoder = new Encoder(2, 3, false,
-		 * Encoder.EncodingType.k2X); // proximity = new Ultrasonic(5,5); //
-		 * .setAutomaticMode(true);
-		 * 
-		 * // LeftEncoder.reset(); // RightEncoder.reset();
-		 * 
-		 * // double wheelRadius = 2;// inches // double wheelCircumference =
-		 * (3.14159265359 * wheelRadius * wheelRadius); //
-		 * LeftEncoder.setDistancePerPulse(wheelCircumference); //
-		 * RightEncoder.setDistancePerPulse(wheelCircumference);
-		 * 
-		 * // int MinRate = 10; // LeftEncoder.setMinRate(MinRate); //
-		 * LeftEncoder.setSamplesToAverage(7); // RightEncoder.setMinRate(MinRate); //
-		 * RightEncoder.setSamplesToAverage(7);
-		 */
+		
+
+
+
+
+
 	}
 
 	public void Drive() {
+
+
+
+
 		double RightTrigger = m_playStationController.RightTrigger();
 		double LeftTrigger = m_playStationController.LeftTrigger();
 		double LeftStick = m_playStationController.LeftStickXAxis();

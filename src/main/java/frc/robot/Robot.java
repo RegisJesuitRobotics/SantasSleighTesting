@@ -8,10 +8,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,7 +25,7 @@ public class Robot extends IterativeRobot {
   private String m_autoSelected;
   private boolean isPlacingHatch = false;
   PlaystationController m_playstationcontroller;
-  RobotDrive m_robotdrive;
+  public static RobotDrive m_robotdrive;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   /**
@@ -37,6 +36,7 @@ public class Robot extends IterativeRobot {
   public void robotInit() {
     m_playstationcontroller = new PlaystationController(0);
     m_robotdrive = new RobotDrive(m_playstationcontroller);
+		SmartDashboard.putData("Spin", new Spin());
 
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
@@ -97,6 +97,7 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Scheduler.getInstance().run();
     // m_robotdrive.Drive();
     // m_robotdrive.getSensorData();
     // m_robotdrive.fullSequence();
