@@ -25,14 +25,10 @@ public class Robot extends IterativeRobot {
   private String m_autoSelected;
   private boolean isPlacingHatch = false;
   PlaystationController m_playstationcontroller;
-<<<<<<< HEAD
   RobotDrive m_robotdrive;
   // LimitSwitch m_limitswitch;
   // CameraStuff m_cameraStuff;
 
-=======
-  public static RobotDrive m_robotdrive;
->>>>>>> c9bb6900875360daa22a3df04db23daed7f05f53
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   /**
@@ -43,11 +39,6 @@ public class Robot extends IterativeRobot {
   public void robotInit() {
     m_playstationcontroller = new PlaystationController(0);
     m_robotdrive = new RobotDrive(m_playstationcontroller);
-<<<<<<< HEAD
-=======
-		SmartDashboard.putData("Spin", new Spin());
-
->>>>>>> c9bb6900875360daa22a3df04db23daed7f05f53
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -109,23 +100,11 @@ public class Robot extends IterativeRobot {
    */
   @Override
   public void teleopPeriodic() {
-<<<<<<< HEAD
     m_robotdrive.Drive();
     m_robotdrive.Slowtoggle();
 
   }
 
-=======
-    Scheduler.getInstance().run();
-    // m_robotdrive.Drive();
-    // m_robotdrive.getSensorData();
-    // m_robotdrive.fullSequence();
-    m_robotdrive.getWhiteLine();
-    // Triangle for approach
-    // Circle for hatch
-  }
-
->>>>>>> c9bb6900875360daa22a3df04db23daed7f05f53
   /**
    * This function is called periodically during test mode.
    */
