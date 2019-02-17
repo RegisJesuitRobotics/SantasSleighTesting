@@ -2,6 +2,9 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+<<<<<<< HEAD
+public class RobotDrive {
+=======
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -13,9 +16,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.awt.Event;
 
 public class RobotDrive extends Subsystem{
+>>>>>>> c9bb6900875360daa22a3df04db23daed7f05f53
 	WPI_TalonSRX RightMotor, LeftMotor;
-	// Encoder LeftEncoder, RightEncoder;
 	PlaystationController m_playStationController;
+<<<<<<< HEAD
+	boolean HasBeenStopped;
+	double Limiter;
+	int nextSpeedLevel;
+
+=======
 	// STUFF IN THE DIO IS ANALOG INPUT
 	AnalogInput LeftUltraSonic, Laser, m_RetroReflectiveSensor, LineFollower;
 	boolean HasBeenStopped;
@@ -38,10 +47,39 @@ public class RobotDrive extends Subsystem{
 	Robot.m_robotdrive.LeftMotor.set(0);
 	Robot.m_robotdrive.RightMotor.set(0);
 	}
+>>>>>>> c9bb6900875360daa22a3df04db23daed7f05f53
 	public RobotDrive(PlaystationController playStationController) {
 		super("robotDrive");
 		m_playStationController = playStationController;
 		HasBeenStopped = false;
+<<<<<<< HEAD
+		LeftMotor = new WPI_TalonSRX(1);
+		RightMotor = new WPI_TalonSRX(0);
+		Limiter = 0.83245;
+		nextSpeedLevel = 3;
+		
+	}
+
+	public void Slowtoggle() {
+
+		if (m_playStationController.ButtonReleaseTriangle() == true) {
+	
+				
+			 if(nextSpeedLevel == 1){
+				Limiter = 0.2;
+				nextSpeedLevel = 3;
+
+			}else if (nextSpeedLevel == 2){
+				Limiter = 0.35;
+				nextSpeedLevel = 1;
+				
+			} else 	if (nextSpeedLevel == 3) {
+				Limiter = 0.83245;
+				nextSpeedLevel = 2;
+			}
+
+		}
+=======
 		LeftMotor = new WPI_TalonSRX(0);
 		RightMotor = new WPI_TalonSRX(1);
 		LeftUltraSonic = new AnalogInput(2);
@@ -55,6 +93,7 @@ public class RobotDrive extends Subsystem{
 
 
 
+>>>>>>> c9bb6900875360daa22a3df04db23daed7f05f53
 	}
 
 	public void Drive() {
@@ -70,10 +109,8 @@ public class RobotDrive extends Subsystem{
 		double RightPower = 1;
 		double LeftPower = 1;
 		double Power;
-		double Limiter = 0.83245;
 		double turn = 2 * LeftStick;
 		Power = RightTrigger - LeftTrigger;
-
 		String move = "";
 		if (LeftStick > Deadzone) {
 
@@ -90,12 +127,12 @@ public class RobotDrive extends Subsystem{
 			RightPower = Power;
 			move = "Straight ";
 		}
-		// if (isTriangle == true) {
-		// LeftEncoder.reset();
-		// RightEncoder.reset();
-		// }
 		LeftMotor.set(-LeftPower * Limiter);
 		RightMotor.set(RightPower * Limiter);
+<<<<<<< HEAD
+	}
+}
+=======
 
 	}
 
@@ -273,3 +310,4 @@ public class RobotDrive extends Subsystem{
 		SmartDashboard.putNumber("Line Follower Value", LineFollower.getVoltage());
 	}
 }
+>>>>>>> c9bb6900875360daa22a3df04db23daed7f05f53

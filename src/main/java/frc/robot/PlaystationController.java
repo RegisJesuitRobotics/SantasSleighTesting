@@ -18,9 +18,12 @@ public class PlaystationController extends Joystick {
 	public boolean ButtonCircle() {
 		return super.getRawButton(3);
 	}
-
 	public boolean ButtonTriangle() {
 		return super.getRawButton(4);
+	}
+
+	public boolean ButtonReleaseTriangle(){
+		return super.getRawButtonReleased(4);
 	}
 
 	public boolean ButtonL1() {
